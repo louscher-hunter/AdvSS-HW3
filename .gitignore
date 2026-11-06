@@ -8,3 +8,13 @@ venv/
 # Python cache
 __pycache__/
 *.pyc
+
+# LaTeX temporary files
+*.aux
+*.log
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.out
+*.pdf
