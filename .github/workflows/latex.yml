@@ -1,8 +1,8 @@
-name: Compile LaTeX Document
+name: Compile and Commit PDF
 
 on:
   push:
-    branches: [ "main", "master" ] # Runs every time you push to main or master
+    branches: [ "main", "master" ]
 
 jobs:
   build_latex:
@@ -14,10 +14,13 @@ jobs:
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v3
         with:
-          root_file: main.tex # Change this if your main file is named differently
+          root_file: main.tex
 
-      - name: Upload PDF Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Compiled-PDF
-          path: main.pdf # Uploads the freshly baked PDF directly to the cloud
+      - name: Force Commit and Push PDF back to Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          # The -f flag forces Git to track the PDF, completely ignoring the .gitignore file
+          git add -f main.pdf 
+          git commit -m "chore: automated pdf compile [skip ci]" || echo "No changes to commit"
+          git push
