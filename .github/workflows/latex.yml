@@ -3,7 +3,8 @@ name: Compile and Commit PDF
 on:
   push:
     branches: [ "main", "master" ]
-
+    paths:
+      - '**.tex' # Only run if a .tex file anywhere in the project was modified
 jobs:
   build_latex:
     runs-on: ubuntu-latest
