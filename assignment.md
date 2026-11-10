@@ -7,7 +7,7 @@ NOTE: $x$-axis is not necessarily along a particular lattice axis.
 
 ## Assignment:
 1. Plot energy spectrum $E_n(k)$ within first BZ for two values of the ribbon width $W_1$, $W_2=2W_1$. Does the system exhibit an even-odd effect?
-2. Plot trasverse profiles $|\psi_{nk}(i)|^2$ as functions of the vertical positions $y_i$ within one sell for representative states $\ket{nk}$.
+2. Plot trasverse profiles $|\psi_{nk}(i)|^2$ as functions of the vertical positions $y_i$ within one cell for representative states $\ket{nk}$.
 3. Play with the model, modify tight-binding parameters to explore different regimes. Report interesting or unexpected features.
 
 ### Features of the Model:
