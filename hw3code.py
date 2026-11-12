@@ -69,8 +69,32 @@ b = np.pi/np.linalg.norm(a1+a2)
 #%% The juicy bit
 
 
-def lattice_eigensolution(ribbon_width = 11, Kpath_resolution = 500):
+def lattice_eigensolution(ribbon_width: int = 11, Kpath_resolution: int = 500):
+    """
     
+    args:
+        ribbon_width: number of atoms across the ribbon
+        Kpath_resolution: number of sample points from Gamma to X.
+    
+    returns:
+        ET: listed by energy level, lists the energies at that level for each K-point from -X to X.
+            These energies start in ascending order at -X, but the energies are tracked through crossings.
+
+            E_n(K_j)
+
+            Index order: [n,j]
+        
+        CT: listed by energy level n, for each K-point K_j, the probability amplitude at the ith lattice site C_ni.
+
+            C_ni(K_j).
+
+            recall that in energy state n, under wavevector K_j, the probability of measuring an excitation
+            at the ith lattice site is P=|C_ni(K_j)|^2
+        
+            Index order: [n, j, i]
+
+
+    """
     N = ribbon_width
 
     Xpath = np.linspace(-b,b,2*Kpath_resolution)
@@ -101,5 +125,5 @@ def lattice_eigensolution(ribbon_width = 11, Kpath_resolution = 500):
             v_old = None
         
     ET = np.transpose(np.array(E))
-    CT = np.transpose(np.array(C), axes = (1,0,2))
+    CT = np.transpose(np.array(C), axes = (2,0,1))
     return ET,CT
