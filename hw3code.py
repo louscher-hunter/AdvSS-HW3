@@ -19,8 +19,11 @@ N = 6
 #%% Building the matrices
 
 # T matrix, done Hunter's way
-def T(k,n=N):
-    Tk = np.zeros((n,n),dtype = complex)
+def T(k,n=N, site_energies = None):
+    if site_energies is None:
+        site_energies = np.zeros(n)
+
+    Tk = np.diag(site_energies).astype(complex)
     neighbordexes = [1,2,1,-1,-2,-1]
     neighbordisps = [a2,-a1+a2,-a1,-a2,a1-a2,a1]
 
@@ -31,8 +34,11 @@ def T(k,n=N):
     return Tk
 
 # T matrix, done Baishali's way
-def T2(k,n=N):
-    Tk = np.zeros((n,n),dtype = complex)
+def T2(k,n=N, site_energies = None):
+    if site_energies is None:
+        site_energies = np.zeros(n)
+
+    Tk = np.diag(site_energies).astype(complex)
     neighbordexes = [1,2,1,-1,-2,-1]
     neighbordisps = [O,-Rx,-Rx,O,Rx,Rx]
 
@@ -52,7 +58,7 @@ b = np.pi/np.linalg.norm(a1+a2)
 #%% The juicy bit
 
 
-def lattice_eigensolution(ribbon_width: int = 11, Kpath_resolution: int = 500, Tk = T):
+def lattice_eigensolution(ribbon_width: int = 11, Kpath_resolution: int = 500,Tk = T):
     """
     
     args:
@@ -89,13 +95,13 @@ def lattice_eigensolution(ribbon_width: int = 11, Kpath_resolution: int = 500, T
     
     # 1. Start at the center (Gamma, k = 0) where states are non-degenerate
     mid = num_k // 2
-    w_mid, v_mid = eigh(T(Kpath[mid], N))
+    w_mid, v_mid = eigh(Tk(Kpath[mid], N))
     E[mid], C[mid] = w_mid, v_mid
     
     # 2. Track forward from Gamma to +X
     v_old = v_mid
     for i in range(mid + 1, num_k):
-        w, v = eigh(T(Kpath[i], N))
+        w, v = eigh(Tk(Kpath[i], N))
         overlap = np.abs(v_old.T.conj() @ v)
         _, mapping = linear_sum_assignment(1.0 - overlap)
         E[i], C[i] = w[mapping], v[:, mapping]
@@ -104,7 +110,7 @@ def lattice_eigensolution(ribbon_width: int = 11, Kpath_resolution: int = 500, T
     # 3. Track backward from Gamma to -X
     v_old = v_mid
     for i in range(mid - 1, -1, -1):
-        w, v = eigh(T(Kpath[i], N))
+        w, v = eigh(Tk(Kpath[i], N))
         overlap = np.abs(v_old.T.conj() @ v)
         _, mapping = linear_sum_assignment(1.0 - overlap)
         E[i], C[i] = w[mapping], v[:, mapping]
